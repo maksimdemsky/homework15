@@ -1,5 +1,8 @@
 package tests;
 
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Test;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
@@ -75,5 +78,25 @@ public class ReqresApiTests extends TestBase {
                 .then()
                 .statusCode(400)
                 .body("error", is("Missing password"));
+    }
+
+    @Test
+    void delayedResponseTest() {
+        given()
+                .when()
+                .get("api/users?page=2")
+                .then()
+                .statusCode(200)
+                .body("total_pages", is(2))
+                .body("data", is(notNullValue()));
+    }
+
+    @Test
+    void ResponseTimeTest() {
+        RequestSpecification requestSpec = new RequestSpecBuilder().build();
+        Response response = given()
+                .spec(requestSpec)
+                .get("api/users?page=2");
+        System.out.println("Response Time : " + response.getTime());
     }
 }
