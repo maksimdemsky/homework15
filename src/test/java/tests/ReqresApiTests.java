@@ -64,4 +64,16 @@ public class ReqresApiTests extends TestBase {
                 .statusCode(204)
                 .body(is(emptyOrNullString()));
     }
+
+    @Test
+    void registerWithoutPasswordTest() {
+        given()
+                .contentType(JSON)
+                .body("{ \"email\": \"sydney@fife\" }")
+                .when()
+                .post("api/register")
+                .then()
+                .statusCode(400)
+                .body("error", is("Missing password"));
+    }
 }
